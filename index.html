@@ -2,171 +2,1405 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Status WA-ku</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Kalkulator Zakat Modern - Hitung zakat penghasilan, tabungan, emas, dan usaha dengan mudah">
+  <title>Zakatku - Kalkulator Zakat Modern</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --primary: #6a1b9a;
-      --bg-light: #f5f5f5;
-      --bg-dark: #121212;
-      --text-light: #333;
-      --text-dark: #f5f5f5;
-      --card-bg-light: #ffffff;
-      --card-bg-dark: #1e1e1e;
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --secondary: #10b981;
+      --text: #111827;
+      --text-light: #6b7280;
+      --bg: #f9fafb;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --border: #e5e7eb;
+      --success: #10b981;
+      --info: #3b82f6;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+
+    .theme-dark {
+      --primary: #818cf8;
+      --primary-dark: #6366f1;
+      --primary-light: #4b5563;
+      --text: #f9fafb;
+      --text-light: #d1d5db;
+      --bg: #111827;
+      --card-bg: rgba(31, 41, 55, 0.9);
+      --border: #374151;
+    }
+
+    .theme-green {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-light: #d1fae5;
+      --bg: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    }
+
+    .theme-purple {
+      --primary: #8b5cf6;
+      --primary-dark: #7c3aed;
+      --primary-light: #ede9fe;
+      --bg: linear-gradient(135deg, #f5f3ff, #ede9fe);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
     }
 
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--bg-light);
-      color: var(--text-light);
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    header {
-      background-color: var(--primary);
-      padding: 20px;
-      text-align: center;
-      color: white;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
-
-    .toggle-theme {
-      position: absolute;
-      right: 16px;
-      top: 16px;
-      background-color: #fff;
-      color: #6a1b9a;
-      border: none;
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 12px;
-      cursor: pointer;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: all 0.3s ease;
+      line-height: 1.6;
     }
 
     .container {
-      padding: 16px;
-    }
-
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-    }
-
-    .status-card {
-      background-color: var(--card-bg-light);
+      max-width: 600px;
+      margin: 30px auto;
+      background: var(--card-bg);
+      padding: 30px;
       border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
     }
 
-    .status-card:hover {
-      transform: scale(1.01);
-    }
-
-    .status-card img,
-    .status-card video {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .card-footer {
-      padding: 10px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .btn-download {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 12px;
-      cursor: pointer;
+    h1, h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 15px;
       font-weight: 600;
     }
 
-    .btn-download:hover {
-      background-color: #4a148c;
+    h1 {
+      font-size: 2rem;
+      margin-top: 10px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 0;
+    }
+
+    p {
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    select, input[type="number"], input[type="date"], input[type="text"] {
+      display: block;
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 15px;
+      transition: border 0.3s;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .form-section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .result, .history, .info-box {
+      margin-top: 25px;
+      background: var(--primary-light);
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+    }
+
+    .result {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--success);
+    }
+
+    .info-box {
+      background: var(--card-bg);
+      margin-bottom: 20px;
+    }
+
+    .info-box h2 {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .toggle-theme {
+      float: right;
+      padding: 8px 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      width: auto;
+      font-size: 1rem;
     }
 
     footer {
       text-align: center;
-      padding: 16px;
-      font-size: 13px;
-      color: #777;
+      margin-top: 40px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      padding-bottom: 20px;
+    }
+  
+    /* Header Styles */
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      position: relative;
+    }
+    
+    .header-content {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 30px 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header-content::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    
+    .header-content::after {
+      content: "";
+      position: absolute;
+      bottom: -30px;
+      left: -30px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    
+    .header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: white;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .header p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .header-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: inline-block;
+      background: white;
+      color: var(--primary);
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Responsive Nisab Table */
+    .nisab-table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .nisab-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    
+    .nisab-table th {
+      background-color: var(--primary);
+      color: white;
+      padding: 15px;
+      text-align: left;
+      font-weight: 500;
+    }
+    
+    .nisab-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    
+    .nisab-table tr:nth-child(even) {
+      background-color: rgba(79, 70, 229, 0.05);
+    }
+    
+    .nisab-table tr:hover {
+      background-color: rgba(79, 70, 229, 0.1);
+    }
+    
+    .nisab-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-right: 5px;
+    }
+    
+    /* Footer Styles */
+    .footer {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 40px 20px;
+      margin-top: 50px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6);
+    }
+    
+    .footer-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      text-align: left;
+    }
+    
+    .footer-column h3 {
+      color: white;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .footer-column h3::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: white;
+    }
+    
+    .footer-column p, .footer-column a {
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 10px;
+      display: block;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-column a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .social-links a {
+      color: white;
+      background: rgba(255, 255, 255, 0.2);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .social-links a:hover {
+      background: white;
+      color: var(--primary);
+      transform: translateY(-3px);
+    }
+    
+    .footer-bottom {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 10px 0;
     }
 
-    /* Dark Mode */
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
     }
 
-    body.dark .status-card {
-      background-color: var(--card-bg-dark);
+    th {
+      background-color: rgba(79, 70, 229, 0.1);
+      font-weight: 600;
     }
 
-    body.dark .toggle-theme {
-      background-color: #333;
-      color: #fff;
+    details {
+      margin: 10px 0;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
-    body.dark footer {
-      color: #aaa;
+    summary {
+      padding: 12px 15px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 8px;
+      list-style: none;
+      transition: all 0.3s;
+    }
+
+    summary:hover {
+      background: rgba(79, 70, 229, 0.2);
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary:after {
+      content: '+';
+      float: right;
+      font-weight: bold;
+      transition: transform 0.3s;
+    }
+
+    details[open] summary:after {
+      content: '-';
+    }
+
+    details p {
+      text-align: left;
+      padding: 15px;
+      margin: 0;
+      background: var(--card-bg);
+      border-radius: 0 0 8px 8px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .button-group button {
+      flex: 1;
+    }
+
+    .share-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: var(--primary);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .tab-container {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      padding: 10px 15px;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-light);
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      margin-bottom: 5px;
+    }
+
+    .input-group .prefix {
+      position: absolute;
+      left: 10px;
+      top: 42px;
+      color: var(--text-light);
+    }
+
+    .input-group input {
+      padding-left: 30px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: none;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      margin-left: 5px;
+      color: var(--primary);
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--text);
+      color: var(--bg);
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.8rem;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .header p {
+        font-size: 0.95rem;
+      }
+      
+      .header-icon {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        font-size: 2rem;
+      }
+      
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-column {
+        margin-bottom: 20px;
+      }
+      
+      .nisab-table th, 
+      .nisab-table td {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .container {
+        margin: 15px;
+        padding: 20px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 1.7rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      .button-group, .share-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .tab {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .header-content {
+        padding: 20px 15px;
+      }
+      
+      .nisab-table th, 
+      .nisab-table td {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>Status WA-ku 📱</h1>
-    <p>Lihat & simpan status WhatsApp dengan mudah</p>
-    <button class="toggle-theme" onclick="toggleTheme()">Dark Mode</button>
-  </header>
-
   <div class="container">
-    <div class="status-grid">
+    <button class="toggle-theme" onclick="toggleDarkMode()">
+      <i class="fas fa-moon"></i> Mode Gelap
+    </button>
+    
+    <div class="header">
+      <h1><i class="fas fa-hand-holding-heart"></i> Zakatku</h1>
+      <p id="desc">Kalkulator zakat modern untuk menghitung zakat penghasilan, tabungan, emas, dan usaha</p>
+    </div>
 
-      <!-- Contoh Gambar -->
-      <div class="status-card">
-        <img src="status1.jpg" alt="Status 1" />
-        <div class="card-footer">
-          <span>Andi</span>
-          <button class="btn-download">Simpan</button>
+    <div class="tab-container">
+      <div class="tab active" onclick="showTab('calculator')">Kalkulator</div>
+      <div class="tab" onclick="showTab('education')">Panduan</div>
+      <div class="tab" onclick="showTab('settings')">Pengaturan</div>
+    </div>
+
+    <div id="calculator-tab" class="tab-content active">
+      <label>Pilih Jenis Zakat:</label>
+      <select id="jenis" onchange="tampilkanForm()">
+        <option value="penghasilan">Zakat Penghasilan</option>
+        <option value="tabungan">Zakat Tabungan</option>
+        <option value="emas">Zakat Emas</option>
+        <option value="usaha">Zakat Usaha</option>
+      </select>
+
+      <div id="form-penghasilan" class="form-section active">
+        <div class="input-group">
+          <label for="income">Penghasilan Bulanan <span class="tooltip">?
+            <span class="tooltiptext">Total penghasilan bersih per bulan setelah pajak dan potongan lainnya</span>
+          </span></label>
+          <span class="prefix">Rp</span>
+          <input type="number" id="income" placeholder="10000000">
+        </div>
+
+        <div class="input-group">
+          <label for="needs">Kebutuhan Pokok <span class="tooltip">?
+            <span class="tooltiptext">Biaya hidup dasar seperti makan, tempat tinggal, transportasi, dll</span>
+          </span></label>
+          <span class="prefix">Rp</span>
+          <input type="number" id="needs" placeholder="5000000">
+        </div>
+
+        <div class="input-group">
+          <label for="customRate">Persentase Zakat <span class="tooltip">?
+            <span class="tooltiptext">Standar zakat penghasilan adalah 2.5%, bisa disesuaikan sesuai pendapat ulama</span>
+          </span></label>
+          <span class="prefix">%</span>
+          <input type="number" id="customRate" placeholder="2.5" step="0.1" min="0" max="100">
+        </div>
+
+        <div class="button-group">
+          <button onclick="hitungZakat()" id="btn-bulanan">
+            <i class="fas fa-calculator"></i> Hitung Bulanan
+          </button>
+          <button onclick="hitungTahunan()" id="btn-tahunan">
+            <i class="fas fa-calendar-alt"></i> Hitung Tahunan
+          </button>
         </div>
       </div>
 
-      <!-- Contoh Video -->
-      <div class="status-card">
-        <video controls>
-          <source src="status2.mp4" type="video/mp4" />
-          Browser tidak mendukung video.
-        </video>
-        <div class="card-footer">
-          <span>Sinta</span>
-          <button class="btn-download">Simpan</button>
+      <div id="form-tabungan" class="form-section">
+        <div class="input-group">
+          <label for="tabungan">Total Tabungan <span class="tooltip">?
+            <span class="tooltiptext">Saldo tabungan yang telah mencapai haul (1 tahun)</span>
+          </span></label>
+          <span class="prefix">Rp</span>
+          <input type="number" id="tabungan" placeholder="50000000">
+        </div>
+
+        <button onclick="hitungTabungan()">
+          <i class="fas fa-calculator"></i> Hitung Zakat Tabungan
+        </button>
+      </div>
+
+      <div id="form-emas" class="form-section">
+        <div class="input-group">
+          <label for="beratEmas">Berat Emas <span class="tooltip">?
+            <span class="tooltiptext">Berat emas yang dimiliki (gram) dan telah mencapai haul (1 tahun)</span>
+          </span></label>
+          <span class="prefix">g</span>
+          <input type="number" id="beratEmas" placeholder="100">
+        </div>
+
+        <div class="input-group">
+          <label for="hargaEmas">Harga per Gram <span class="tooltip">?
+            <span class="tooltiptext">Harga emas saat ini per gram (standar: Rp 1.100.000)</span>
+          </span></label>
+          <span class="prefix">Rp</span>
+          <input type="number" id="hargaEmas" value="1100000">
+        </div>
+
+        <button onclick="hitungEmas()">
+          <i class="fas fa-calculator"></i> Hitung Zakat Emas
+        </button>
+      </div>
+
+      <div id="form-usaha" class="form-section">
+        <div class="input-group">
+          <label for="modalUsaha">Modal + Keuntungan <span class="tooltip">?
+            <span class="tooltiptext">Total modal dan keuntungan usaha dalam satu tahun</span>
+          </span></label>
+          <span class="prefix">Rp</span>
+          <input type="number" id="modalUsaha" placeholder="200000000">
+        </div>
+
+        <div class="input-group">
+          <label for="biayaUsaha">Hutang & Biaya Operasional <span class="tooltip">?
+            <span class="tooltiptext">Total hutang dan biaya operasional yang harus dibayar</span>
+          </span></label>
+          <span class="prefix">Rp</span>
+          <input type="number" id="biayaUsaha" placeholder="50000000">
+        </div>
+
+        <button onclick="hitungUsaha()">
+          <i class="fas fa-calculator"></i> Hitung Zakat Usaha
+        </button>
+      </div>
+
+      <div class="result" id="result"></div>
+      <div class="history" id="history"></div>
+
+      <div class="button-group">
+        <button onclick="downloadPDF()">
+          <i class="fas fa-file-pdf"></i> Simpan ke PDF
+        </button>
+        <button onclick="resetForm()">
+          <i class="fas fa-redo"></i> Reset Form
+        </button>
+      </div>
+
+      <div class="share-buttons">
+        <button onclick="shareWhatsApp()" style="background-color: #25D366;">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </button>
+        <button onclick="shareEmail()" style="background-color: #EA4335;">
+          <i class="fas fa-envelope"></i> Email
+        </button>
+      </div>
+    </div>
+
+    <div id="education-tab" class="tab-content">
+      <div class="info-box">
+        <h2><i class="fas fa-gem"></i> Nisab Zakat</h2>
+        <p>Nisab adalah batas minimum harta yang wajib dikenakan zakat. Berikut nisab untuk berbagai jenis zakat:</p>
+        
+        <div class="nisab-table-container">
+          <table class="nisab-table">
+            <thead>
+              <tr>
+                <th>Jenis Zakat</th>
+                <th>Nisab</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Penghasilan</td>
+                <td>Rp 93.500.000/tahun</td>
+                <td>Setara dengan 85gr emas</td>
+              </tr>
+              <tr>
+                <td>Tabungan</td>
+                <td>Rp 93.500.000</td>
+                <td>Saldo minimal selama 1 tahun</td>
+              </tr>
+              <tr>
+                <td>Emas</td>
+                <td>85 gram</td>
+                <td>Dimiliki selama 1 tahun</td>
+              </tr>
+              <tr>
+                <td>Usaha</td>
+                <td>Rp 93.500.000</td>
+                <td>Setelah dikurangi biaya</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
+      <div class="info-box">
+        <h2><i class="fas fa-question-circle"></i> FAQ Zakat</h2>
+        
+        <details>
+          <summary>Apa itu zakat?</summary>
+          <p>Zakat adalah kewajiban bagi umat Islam untuk menyucikan harta dengan mengeluarkan sebagian dari harta yang dimiliki kepada yang berhak menerimanya. Zakat merupakan rukun Islam yang keempat dan memiliki kedudukan yang sangat penting dalam Islam.</p>
+        </details>
+        
+        <details>
+          <summary>Siapa yang wajib membayar zakat?</summary>
+          <p>Muslim yang memiliki harta mencapai nisab (batas minimum) dan haul (masa kepemilikan selama 1 tahun hijriyah), kecuali zakat penghasilan yang bisa dikeluarkan setiap bulan. Orang tersebut juga harus merdeka, berakal, baligh, dan memiliki kelebihan dari kebutuhan pokok.</p>
+        </details>
+        
+        <details>
+          <summary>Apa dalil tentang zakat?</summary>
+          <p>QS. At-Taubah: 103 - "Ambillah zakat dari sebagian harta mereka, dengan zakat itu kamu membersihkan dan mensucikan mereka..."</p>
+          <p>QS. Al-Baqarah: 110 - "Dan dirikanlah shalat dan tunaikanlah zakat..."</p>
+          <p>Hadits: "Islam dibangun atas lima perkara: syahadat, shalat, zakat, puasa Ramadhan, dan haji ke Baitullah." (HR. Bukhari-Muslim)</p>
+        </details>
+        
+        <details>
+          <summary>Kepada siapa zakat diberikan?</summary>
+          <p>Zakat diberikan kepada 8 asnaf (golongan) sebagaimana disebutkan dalam QS. At-Taubah: 60: fakir, miskin, amil zakat, muallaf, budak yang ingin memerdekakan diri, orang yang berhutang, fi sabilillah, dan ibnu sabil.</p>
+        </details>
+      </div>
+
+      <div class="info-box">
+        <h2><i class="fas fa-video"></i> Video Edukasi</h2>
+        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 15px; border-radius: 8px;">
+          <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+        </div>
+        <p style="text-align: center; margin-top: 10px;">Tonton video penjelasan tentang zakat</p>
+      </div>
+    </div>
+
+    <div id="settings-tab" class="tab-content">
+      <div class="info-box">
+        <h2><i class="fas fa-bell"></i> Pengingat Zakat</h2>
+        <label for="reminderDate">Pilih Tanggal Pengingat:</label>
+        <input type="date" id="reminderDate" onchange="setReminder()">
+        <p id="reminderInfo" style="text-align: left; margin-top: 10px;"></p>
+      </div>
+
+      <div class="info-box">
+        <h2><i class="fas fa-globe"></i> Bahasa / Language</h2>
+        <select id="langSwitcher" onchange="switchLang()">
+          <option value="id">Indonesia</option>
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
+        </select>
+      </div>
+
+      <div class="info-box">
+        <h2><i class="fas fa-palette"></i> Tema Warna</h2>
+        <div class="theme-options">
+          <div class="button-group">
+            <button onclick="setTheme('default')" style="background: linear-gradient(135deg, #e0e7ff, #fefce8); color: #111827;">
+              <i class="fas fa-sun"></i> Biru-Lemon
+            </button>
+            <button onclick="setTheme('green')" style="background: linear-gradient(135deg, #d1fae5, #bbf7d0); color: #065f46;">
+              <i class="fas fa-leaf"></i> Hijau
+            </button>
+          </div>
+          <div class="button-group">
+            <button onclick="setTheme('purple')" style="background: linear-gradient(135deg, #ede9fe, #f5d0fe); color: #6d28d9;">
+              <i class="fas fa-moon"></i> Ungu
+            </button>
+            <button onclick="setTheme('dark')" style="background: #1e293b; color: #f9fafb;">
+              <i class="fas fa-moon"></i> Gelap
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h2><i class="fas fa-info-circle"></i> Tentang Aplikasi</h2>
+        <p style="text-align: left;">Zakatku adalah aplikasi kalkulator zakat modern yang membantu Anda menghitung berbagai jenis zakat dengan mudah dan akurat.</p>
+        <p style="text-align: left; margin-top: 10px;">Versi: 2.0.0</p>
+        <p style="text-align: left;">Dikembangkan dengan ❤️ untuk umat Islam</p>
+      </div>
     </div>
   </div>
 
   <footer>
-    &copy; 2025 Status WA-ku | TERNAK PERTAMA INDONESIA
+    &copy; 2025 Zakatku - Kalkulator Zakat Modern. Seluruh hak cipta dilindungi.
   </footer>
 
   <script>
-    function toggleTheme() {
-      document.body.classList.toggle('dark');
-    }
-  </script>
+    const { jsPDF } = window.jspdf;
+    let lastResult = "";
+    let currentTab = "calculator";
 
+    // Inisialisasi aplikasi
+    function initApp() {
+      tampilkanRiwayat();
+      loadReminder();
+      loadLang();
+      loadTheme();
+      updateTabUI();
+    }
+
+    // Fungsi untuk menampilkan tab yang dipilih
+    function showTab(tabName) {
+      currentTab = tabName;
+      updateTabUI();
+    }
+
+    // Update tampilan tab
+    function updateTabUI() {
+      // Sembunyikan semua konten tab
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Tampilkan tab yang dipilih
+      document.getElementById(`${currentTab}-tab`).classList.add('active');
+      
+      // Update tab navigasi
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Aktifkan tab yang sesuai
+      const tabs = document.querySelectorAll('.tab');
+      if (currentTab === 'calculator') tabs[0].classList.add('active');
+      if (currentTab === 'education') tabs[1].classList.add('active');
+      if (currentTab === 'settings') tabs[2].classList.add('active');
+    }
+
+    function tampilkanForm() {
+      const jenis = document.getElementById("jenis").value;
+      document.querySelectorAll(".form-section").forEach(e => e.classList.remove("active"));
+      document.getElementById("form-" + jenis).classList.add("active");
+      document.getElementById("result").innerText = "";
+    }
+
+    function formatRupiah(angka) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+    }
+
+    function tampil(teks) {
+      lastResult = teks;
+      const resultElement = document.getElementById("result");
+      resultElement.innerHTML = `<strong><i class="fas fa-hand-holding-heart"></i> Hasil Perhitungan:</strong><br><br>${teks}`;
+      
+      // Animasi
+      resultElement.style.animation = 'none';
+      resultElement.offsetHeight; // Trigger reflow
+      resultElement.style.animation = 'fadeIn 0.5s ease';
+    }
+
+    function simpanRiwayat(jenis, jumlah) {
+      const data = { waktu: new Date().toLocaleString(), jenis, jumlah };
+      const r = JSON.parse(localStorage.getItem("riwayatZakat")) || [];
+      r.unshift(data);
+      localStorage.setItem("riwayatZakat", JSON.stringify(r.slice(0, 5)));
+      tampilkanRiwayat();
+    }
+
+    function tampilkanRiwayat() {
+      const r = JSON.parse(localStorage.getItem("riwayatZakat")) || [];
+      const historyElement = document.getElementById("history");
+      
+      if (r.length) {
+        historyElement.innerHTML = `
+          <strong><i class="fas fa-history"></i> Riwayat Terakhir:</strong>
+          <ul style="margin-top: 10px;">
+            ${r.map(x => `
+              <li style="margin-bottom: 8px; display: flex; justify-content: space-between;">
+                <span>${x.jenis}</span>
+                <span style="font-weight: 600;">${formatRupiah(parseInt(x.jumlah))}</span>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      } else {
+        historyElement.innerHTML = "";
+      }
+    }
+
+    function hitungZakat() {
+      showLoading('btn-bulanan');
+      
+      setTimeout(() => {
+        const i = parseFloat(document.getElementById('income').value) || 0;
+        const n = parseFloat(document.getElementById('needs').value) || 0;
+        const r = parseFloat(document.getElementById('customRate').value) || 2.5;
+        const netto = i - n;
+        
+        if (netto <= 0) {
+          hideLoading('btn-bulanan', 'Hitung Bulanan');
+          return tampil("Tidak wajib zakat karena penghasilan bersih tidak mencapai nisab.");
+        }
+        
+        const hasil = netto * r / 100;
+        const nisab = 93500000 / 12; // Nisab bulanan
+        
+        let message = `Penghasilan bersih: ${formatRupiah(netto)}<br>`;
+        message += `Zakat (${r}%): <strong>${formatRupiah(hasil)}</strong> per bulan<br><br>`;
+        
+        if (netto >= nisab) {
+          message += `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Wajib zakat (melebihi nisab bulanan ${formatRupiah(nisab)})</span>`;
+        } else {
+          message += `<span style="color: var(--warning);"><i class="fas fa-info-circle"></i> Catatan: Penghasilan bersih di bawah nisab bulanan (${formatRupiah(nisab)}), namun zakat tetap dianjurkan</span>`;
+        }
+        
+        tampil(message);
+        simpanRiwayat("Penghasilan Bulanan", hasil);
+        hideLoading('btn-bulanan', 'Hitung Bulanan');
+      }, 800);
+    }
+
+    function hitungTahunan() {
+      showLoading('btn-tahunan');
+      
+      setTimeout(() => {
+        const i = parseFloat(document.getElementById('income').value) || 0;
+        const n = parseFloat(document.getElementById('needs').value) || 0;
+        const r = parseFloat(document.getElementById('customRate').value) || 2.5;
+        const hasil = ((i - n) * 12) * r / 100;
+        
+        if (hasil <= 0) {
+          hideLoading('btn-tahunan', 'Hitung Tahunan');
+          return tampil("Tidak wajib zakat karena penghasilan bersih tidak mencapai nisab.");
+        }
+        
+        const nisab = 93500000; // Nisab tahunan
+        
+        let message = `Penghasilan bersih tahunan: ${formatRupiah((i - n) * 12)}<br>`;
+        message += `Zakat (${r}%): <strong>${formatRupiah(hasil)}</strong> per tahun<br><br>`;
+        
+        if ((i - n) * 12 >= nisab) {
+          message += `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Wajib zakat (melebihi nisab tahunan ${formatRupiah(nisab)})</span>`;
+        } else {
+          message += `<span style="color: var(--warning);"><i class="fas fa-info-circle"></i> Catatan: Penghasilan bersih di bawah nisab tahunan (${formatRupiah(nisab)}), namun zakat tetap dianjurkan</span>`;
+        }
+        
+        tampil(message);
+        simpanRiwayat("Penghasilan Tahunan", hasil);
+        hideLoading('btn-tahunan', 'Hitung Tahunan');
+      }, 800);
+    }
+
+    function hitungTabungan() {
+      const t = parseFloat(document.getElementById('tabungan').value) || 0;
+      const hasil = t * 0.025;
+      const nisab = 93500000;
+      
+      let message = `Total tabungan: ${formatRupiah(t)}<br>`;
+      message += `Zakat (2.5%): <strong>${formatRupiah(hasil)}</strong><br><br>`;
+      
+      if (t >= nisab) {
+        message += `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Wajib zakat (melebihi nisab ${formatRupiah(nisab)})</span>`;
+      } else {
+        message += `<span style="color: var(--warning);"><i class="fas fa-info-circle"></i> Tidak wajib zakat (di bawah nisab ${formatRupiah(nisab)})</span>`;
+      }
+      
+      tampil(message);
+      simpanRiwayat("Tabungan", hasil);
+    }
+
+    function hitungEmas() {
+      const b = parseFloat(document.getElementById('beratEmas').value) || 0;
+      const h = parseFloat(document.getElementById('hargaEmas').value) || 0;
+      const nilai = b * h;
+      const hasil = nilai * 0.025;
+      const nisabGram = 85;
+      const nisabRupiah = nisabGram * h;
+      
+      let message = `Total emas: ${b}g (${formatRupiah(nilai)})<br>`;
+      message += `Zakat (2.5%): <strong>${formatRupiah(hasil)}</strong><br><br>`;
+      
+      if (b >= nisabGram) {
+        message += `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Wajib zakat (melebihi nisab ${nisabGram}g atau ${formatRupiah(nisabRupiah)})</span>`;
+      } else {
+        message += `<span style="color: var(--warning);"><i class="fas fa-info-circle"></i> Tidak wajib zakat (di bawah nisab ${nisabGram}g atau ${formatRupiah(nisabRupiah)})</span>`;
+      }
+      
+      tampil(message);
+      simpanRiwayat("Emas", hasil);
+    }
+
+    function hitungUsaha() {
+      const m = parseFloat(document.getElementById('modalUsaha').value) || 0;
+      const b = parseFloat(document.getElementById('biayaUsaha').value) || 0;
+      const hasil = (m - b) * 0.025;
+      const nisab = 93500000;
+      
+      let message = `Total harta usaha bersih: ${formatRupiah(m - b)}<br>`;
+      message += `Zakat (2.5%): <strong>${formatRupiah(hasil)}</strong><br><br>`;
+      
+      if ((m - b) >= nisab) {
+        message += `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Wajib zakat (melebihi nisab ${formatRupiah(nisab)})</span>`;
+      } else {
+        message += `<span style="color: var(--warning);"><i class="fas fa-info-circle"></i> Tidak wajib zakat (di bawah nisab ${formatRupiah(nisab)})</span>`;
+      }
+      
+      tampil(message);
+      simpanRiwayat("Usaha", hasil);
+    }
+
+    function downloadPDF() {
+      if (!lastResult) return alert("Silakan hitung zakat terlebih dahulu");
+      
+      const doc = new jsPDF();
+      doc.setFontSize(18);
+      doc.setTextColor(79, 70, 229);
+      doc.text("Zakatku - Hasil Perhitungan Zakat", 105, 20, null, null, 'center');
+      
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text("Berikut adalah hasil perhitungan zakat Anda:", 20, 40);
+      
+      // Split the HTML content into lines
+      const lines = lastResult.replace(/<[^>]*>/g, "").split('\n');
+      let y = 60;
+      
+      doc.setFontSize(14);
+      lines.forEach(line => {
+        if (line.trim() !== "") {
+          doc.text(line, 20, y);
+          y += 10;
+        }
+      });
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text("Dihitung pada: " + new Date().toLocaleString(), 20, y + 20);
+      doc.text("www.zakatku.app", 105, 290, null, null, 'center');
+      
+      doc.save("zakatku_" + new Date().toISOString().slice(0, 10) + ".pdf");
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("theme-dark");
+      const icon = document.querySelector('.toggle-theme i');
+      const text = document.querySelector('.toggle-theme');
+      
+      if (document.body.classList.contains("theme-dark")) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+        text.innerHTML = '<i class="fas fa-sun"></i> Mode Terang';
+      } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+        text.innerHTML = '<i class="fas fa-moon"></i> Mode Gelap';
+      }
+      
+      // Simpan preferensi tema
+      const currentTheme = document.getElementById('themeSelector')?.value || 'default';
+      if (document.body.classList.contains("theme-dark") && currentTheme !== 'dark') {
+        localStorage.setItem("zakatTheme", "dark");
+      } else if (!document.body.classList.contains("theme-dark") && currentTheme === 'dark') {
+        localStorage.setItem("zakatTheme", currentTheme);
+      }
+    }
+
+    function setReminder() {
+      const date = document.getElementById("reminderDate").value;
+      if (date) {
+        localStorage.setItem("zakatReminder", date);
+        document.getElementById("reminderInfo").innerHTML = `
+          <i class="fas fa-bell" style="color: var(--primary);"></i> 
+          Pengingat zakat telah diatur untuk: <strong>${new Date(date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>
+        `;
+      }
+    }
+
+    function loadReminder() {
+      const saved = localStorage.getItem("zakatReminder");
+      if (saved) {
+        document.getElementById("reminderDate").value = saved;
+        document.getElementById("reminderInfo").innerHTML = `
+          <i class="fas fa-bell" style="color: var(--primary);"></i> 
+          Pengingat zakat berikutnya: <strong>${new Date(saved).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>
+        `;
+      }
+    }
+
+    function switchLang() {
+      const l = document.getElementById("langSwitcher").value;
+      const translations = {
+        id: {
+          income: "Penghasilan Bulanan (Rp)",
+          needs: "Kebutuhan Pokok (Rp)",
+          rate: "Persentase Zakat (%)",
+          calculateMonthly: "Hitung Zakat Bulanan",
+          calculateAnnual: "Hitung Zakat Tahunan",
+          savePDF: "Simpan Hasil ke PDF",
+          reminder: "Pilih Tanggal Pengingat:",
+          title: "Zakatku",
+          description: "Kalkulator zakat modern untuk menghitung zakat penghasilan, tabungan, emas, dan usaha",
+          reset: "Reset Form",
+          whatsapp: "WhatsApp",
+          email: "Email",
+          calculator: "Kalkulator",
+          education: "Panduan",
+          settings: "Pengaturan"
+        },
+        en: {
+          income: "Monthly Income (Rp)",
+          needs: "Basic Needs (Rp)",
+          rate: "Zakat Percentage (%)",
+          calculateMonthly: "Calculate Monthly Zakat",
+          calculateAnnual: "Calculate Annual Zakat",
+          savePDF: "Save Result to PDF",
+          reminder: "Select Reminder Date:",
+          title: "Zakatku",
+          description: "Modern zakat calculator for income, savings, gold, and business",
+          reset: "Reset Form",
+          whatsapp: "WhatsApp",
+          email: "Email",
+          calculator: "Calculator",
+          education: "Guide",
+          settings: "Settings"
+        },
+        ar: {
+          income: "الدخل الشهري (Rp)",
+          needs: "الاحتياجات الأساسية (Rp)",
+          rate: "نسبة الزكاة (%)",
+          calculateMonthly: "حساب زكاة شهرية",
+          calculateAnnual: "حساب زكاة سنوية",
+          savePDF: "حفظ النتيجة كملف PDF",
+          reminder: "اختر تاريخ التذكير:",
+          title: "زكاتي",
+          description: "آلة حاسبة حديثة للزكاة للدخل، المدخرات، الذهب، والأعمال",
+          reset: "إعادة تعيين النموذج",
+          whatsapp: "واتساب",
+          email: "بريد إلكتروني",
+          calculator: "آلة حاسبة",
+          education: "دليل",
+          settings: "إعدادات"
+        }
+      };
+
+      const t = translations[l] || translations['id'];
+      
+      // Update UI elements
+      document.getElementById("label-income").innerHTML = t.income;
+      document.getElementById("label-needs").innerHTML = t.needs;
+      document.getElementById("label-rate").innerHTML = t.rate;
+      document.getElementById("btn-bulanan").innerHTML = `<i class="fas fa-calculator"></i> ${t.calculateMonthly}`;
+      document.getElementById("btn-tahunan").innerHTML = `<i class="fas fa-calendar-alt"></i> ${t.calculateAnnual}`;
+      document.querySelector("button[onclick='downloadPDF()']").innerHTML = `<i class="fas fa-file-pdf"></i> ${t.savePDF}`;
+      document.querySelector("button[onclick='resetForm()']").innerHTML = `<i class="fas fa-redo"></i> ${t.reset}`;
+      document.getElementById("label-reminder").innerHTML = t.reminder;
+      document.querySelector("h1").innerHTML = `<i class="fas fa-hand-holding-heart"></i> ${t.title}`;
+      document.getElementById("desc").innerHTML = t.description;
+      
+      // Update share buttons
+      document.querySelector("button[onclick='shareWhatsApp()']").innerHTML = `<i class="fab fa-whatsapp"></i> ${t.whatsapp}`;
+      document.querySelector("button[onclick='shareEmail()']").innerHTML = `<i class="fas fa-envelope"></i> ${t.email}`;
+      
+      // Update tab names
+      const tabs = document.querySelectorAll('.tab');
+      tabs[0].innerText = t.calculator;
+      tabs[1].innerText = t.education;
+      tabs[2].innerText = t.settings;
+      
+      localStorage.setItem("zakatLang", l);
+    }
+
+    function loadLang() {
+      const savedLang = localStorage.getItem("zakatLang") || "id";
+      document.getElementById("langSwitcher").value = savedLang;
+      switchLang();
+    }
+
+    function setTheme(theme) {
+      // Reset all theme classes
+      document.body.className = '';
+      
+      // Apply selected theme
+      if (theme && theme !== 'default') {
+        document.body.classList.add('theme-' + theme);
+      }
+      
+      // Update theme selector if exists
+      if (document.getElementById('themeSelector')) {
+        document.getElementById('themeSelector').value = theme;
+      }
+      
+      // Save to localStorage
+      localStorage.setItem("zakatTheme", theme);
+      
+      // Update dark mode toggle if needed
+      const darkModeToggle = document.querySelector('.toggle-theme');
+      if (darkModeToggle) {
+        if (theme === 'dark') {
+          darkModeToggle.innerHTML = '<i class="fas fa-sun"></i> Mode Terang';
+        } else {
+          darkModeToggle.innerHTML = '<i class="fas fa-moon"></i> Mode Gelap';
+        }
+      }
+    }
+
+    function loadTheme() {
+      const saved = localStorage.getItem("zakatTheme") || 'default';
+      setTheme(saved);
+    }
+
+    function shareWhatsApp() {
+      if (!lastResult) return alert("Silakan hitung zakat terlebih dahulu");
+      const msg = `Assalamu'alaikum,\n\nSaya telah menghitung zakat saya menggunakan Zakatku:\n\n${lastResult.replace(/<[^>]*>/g, "")}\n\nUnduh aplikasinya di www.zakatku.app`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function shareEmail() {
+      if (!lastResult) return alert("Silakan hitung zakat terlebih dahulu");
+      const subject = "Hasil Perhitungan Zakat - Zakatku";
+      const body = `Assalamu'alaikum,\n\nBerikut hasil perhitungan zakat saya:\n\n${lastResult.replace(/<[^>]*>/g, "")}\n\nDihitung pada: ${new Date().toLocaleString()}\n\nUnduh aplikasi Zakatku di www.zakatku.app`;
+      window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+    }
+
+    function resetForm() {
+      document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.value = '';
+      });
+      document.getElementById("result").innerText = '';
+    }
+
+    function showLoading(buttonId) {
+      const button = document.getElementById(buttonId);
+      const originalText = button.innerHTML;
+      button.setAttribute('data-original-text', originalText);
+      button.innerHTML = '<div class="spinner"></div>';
+      button.disabled = true;
+    }
+
+    function hideLoading(buttonId, buttonText) {
+      const button = document.getElementById(buttonId);
+      const originalText = button.getAttribute('data-original-text');
+      button.innerHTML = originalText || buttonText;
+      button.disabled = false;
+    }
+
+    // Initialize the app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
 </body>
 </html>
