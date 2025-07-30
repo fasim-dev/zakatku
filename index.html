@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Status WA-ku</title>
+  <style>
+    :root {
+      --primary: #6a1b9a;
+      --bg-light: #f5f5f5;
+      --bg-dark: #121212;
+      --text-light: #333;
+      --text-dark: #f5f5f5;
+      --card-bg-light: #ffffff;
+      --card-bg-dark: #1e1e1e;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    header {
+      background-color: var(--primary);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .toggle-theme {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      background-color: #fff;
+      color: #6a1b9a;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .container {
+      padding: 16px;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .status-card {
+      background-color: var(--card-bg-light);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s;
+    }
+
+    .status-card:hover {
+      transform: scale(1.01);
+    }
+
+    .status-card img,
+    .status-card video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .card-footer {
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .btn-download {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-download:hover {
+      background-color: #4a148c;
+    }
+
+    footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    /* Dark Mode */
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    body.dark .status-card {
+      background-color: var(--card-bg-dark);
+    }
+
+    body.dark .toggle-theme {
+      background-color: #333;
+      color: #fff;
+    }
+
+    body.dark footer {
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Status WA-ku 📱</h1>
+    <p>Lihat & simpan status WhatsApp dengan mudah</p>
+    <button class="toggle-theme" onclick="toggleTheme()">Dark Mode</button>
+  </header>
+
+  <div class="container">
+    <div class="status-grid">
+
+      <!-- Contoh Gambar -->
+      <div class="status-card">
+        <img src="status1.jpg" alt="Status 1" />
+        <div class="card-footer">
+          <span>Andi</span>
+          <button class="btn-download">Simpan</button>
+        </div>
+      </div>
+
+      <!-- Contoh Video -->
+      <div class="status-card">
+        <video controls>
+          <source src="status2.mp4" type="video/mp4" />
+          Browser tidak mendukung video.
+        </video>
+        <div class="card-footer">
+          <span>Sinta</span>
+          <button class="btn-download">Simpan</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Status WA-ku | TERNAK PERTAMA INDONESIA
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
+
+</body>
+</html>
